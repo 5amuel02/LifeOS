@@ -4,13 +4,12 @@ A personal life-management Android app built entirely in **Kotlin + Jetpack Comp
 
 > 📱 Android · minSdk 26 (Android 8.0+) · 100% Kotlin · 100% Jetpack Compose · Material 3
 
-<!-- Add screenshots or a demo GIF here before sharing this README — a picture sells the app faster than any bullet list.
 <p align="center">
   <img src=".github/screenshots/home.png" width="220" />
   <img src=".github/screenshots/belajar.png" width="220" />
-  <img src=".github/screenshots/statistik.png" width="220" />
+  <img src=".github/screenshots/stats-overview.png" width="220" />
+  <img src=".github/screenshots/stats-charts.png" width="220" />
 </p>
--->
 
 ## Why this project
 
