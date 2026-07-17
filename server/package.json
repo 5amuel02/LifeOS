@@ -1,0 +1,19 @@
+{
+  "name": "lifeos-ai-proxy",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "secret:anthropic": "wrangler secret put ANTHROPIC_API_KEY",
+    "secret:app": "wrangler secret put APP_SHARED_SECRET"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260716.1",
+    "typescript": "^7.0.2",
+    "wrangler": "^4.111.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.111.0"
+  }
+}

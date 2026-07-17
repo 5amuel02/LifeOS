@@ -1,0 +1,56 @@
+package com.example.lifeos.ui.screens.jadwal
+
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.lifeos.data.LifeOSDatabase
+import com.example.lifeos.data.jadwal.JadwalEntity
+import com.example.lifeos.data.jadwal.JadwalRepository
+import com.example.lifeos.notifications.JadwalReminderScheduler
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import java.time.LocalDate
+
+class JadwalViewModel(application: Application) : AndroidViewModel(application) {
+    private val database = LifeOSDatabase.getInstance(application)
+    private val repository = JadwalRepository(database.jadwalDao())
+
+    val items: StateFlow<List<JadwalEntity>> = repository.getAll()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    fun addItem(title: String, date: LocalDate, minuteOfDay: Int?) {
+        if (title.isBlank()) return
+        val trimmedTitle = title.trim()
+        viewModelScope.launch {
+            val id = repository.addItem(trimmedTitle, date.toEpochDay(), minuteOfDay)
+            if (minuteOfDay != null) {
+                JadwalReminderScheduler.schedule(context, id, trimmedTitle, date.toEpochDay(), minuteOfDay)
+            }
+        }
+    }
+
+    fun toggleCompleted(item: JadwalEntity) {
+        val nowCompleted = !item.isCompleted
+        viewModelScope.launch {
+            repository.setCompleted(item.id, nowCompleted)
+            if (nowCompleted) {
+                JadwalReminderScheduler.cancel(context, item.id)
+            } else {
+                item.minuteOfDay?.let { minute ->
+                    JadwalReminderScheduler.schedule(context, item.id, item.title, item.dateEpochDay, minute)
+                }
+            }
+        }
+    }
+
+    fun deleteItem(id: Long) {
+        viewModelScope.launch {
+            JadwalReminderScheduler.cancel(context, id)
+            repository.deleteItem(id)
+        }
+    }
+
+    private val context get() = getApplication<Application>().applicationContext
+}

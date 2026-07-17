@@ -1,0 +1,8 @@
+name = "lifeos-ai-proxy"
+main = "src/index.ts"
+compatibility_date = "2026-07-01"
+
+# Created via `wrangler kv namespace create RATE_LIMIT_KV` — paste the returned id below.
+kv_namespaces = [
+  { binding = "RATE_LIMIT_KV", id = "6dd940fc67254f0fa9e486b124d5597e" }
+]
