@@ -1,12 +1,12 @@
 package com.example.lifeos.ui.screens.money
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.lifeos.data.LifeOSDatabase
 import com.example.lifeos.data.money.TransactionEntity
 import com.example.lifeos.data.money.TransactionRepository
 import com.example.lifeos.data.money.TransactionType
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -17,8 +17,10 @@ data class MoneySummary(val totalIncome: Long, val totalExpense: Long) {
     val balance: Long get() = totalIncome - totalExpense
 }
 
-class MoneyManagerViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = TransactionRepository(LifeOSDatabase.getInstance(application).transactionDao())
+@HiltViewModel
+class MoneyManagerViewModel @Inject constructor(
+    private val repository: TransactionRepository,
+) : ViewModel() {
 
     val transactions: StateFlow<List<TransactionEntity>> = repository.getAllTransactions()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())

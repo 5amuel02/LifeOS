@@ -52,8 +52,10 @@ import com.example.lifeos.navigation.BottomNavBar
 import com.example.lifeos.navigation.LifeOSNavHost
 import com.example.lifeos.ui.screens.settings.SettingsViewModel
 import com.example.lifeos.ui.theme.LifeOSTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val requestNotificationPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { /* user choice respected */ }

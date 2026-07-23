@@ -45,7 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.strings.LocalStrings
 import com.example.lifeos.data.money.TransactionEntity
 import com.example.lifeos.data.money.TransactionType
@@ -125,7 +125,7 @@ fun MoneyManagerScreen(
 @Composable
 private fun TransactionsTabContent(modifier: Modifier = Modifier) {
     val strings = LocalStrings.current
-    val viewModel: MoneyManagerViewModel = viewModel()
+    val viewModel: MoneyManagerViewModel = hiltViewModel()
     val transactions by viewModel.transactions.collectAsStateWithLifecycle()
     val summary by viewModel.summary.collectAsStateWithLifecycle()
     var transactionIdPendingDelete by rememberSaveable { mutableStateOf<Long?>(null) }
