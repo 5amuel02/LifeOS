@@ -51,7 +51,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.strings.LifeOSStrings
 import com.example.lifeos.core.strings.LocalStrings
 import com.example.lifeos.data.notes.DrawingFileStore
@@ -71,7 +71,7 @@ fun NotesScreen(
     onOpenDrawing: (Long) -> Unit = {},
 ) {
     val strings = LocalStrings.current
-    val viewModel: NotesListViewModel = viewModel()
+    val viewModel: NotesListViewModel = hiltViewModel()
     val notes by viewModel.notes.collectAsStateWithLifecycle()
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     var noteIdPendingDelete by rememberSaveable { mutableStateOf<Long?>(null) }

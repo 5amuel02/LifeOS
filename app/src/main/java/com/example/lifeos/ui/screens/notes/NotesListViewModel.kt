@@ -1,12 +1,12 @@
 package com.example.lifeos.ui.screens.notes
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.lifeos.data.LifeOSDatabase
 import com.example.lifeos.data.notes.ChecklistRepository
 import com.example.lifeos.data.notes.NoteEntity
 import com.example.lifeos.data.notes.NoteRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -21,10 +21,11 @@ data class NoteListItemUi(
     val checkedItems: Int,
 )
 
-class NotesListViewModel(application: Application) : AndroidViewModel(application) {
-    private val database = LifeOSDatabase.getInstance(application)
-    private val repository = NoteRepository(database.noteDao())
-    private val checklistRepository = ChecklistRepository(database.checklistItemDao())
+@HiltViewModel
+class NotesListViewModel @Inject constructor(
+    private val repository: NoteRepository,
+    private val checklistRepository: ChecklistRepository,
+) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()

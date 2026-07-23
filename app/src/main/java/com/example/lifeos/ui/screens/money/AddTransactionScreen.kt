@@ -40,7 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.strings.LocalStrings
 import com.example.lifeos.data.money.TransactionCategory
 import com.example.lifeos.data.money.TransactionType
@@ -54,7 +54,7 @@ import java.util.Locale
 @Composable
 fun AddTransactionScreen(onBack: () -> Unit) {
     val strings = LocalStrings.current
-    val viewModel: AddTransactionViewModel = viewModel()
+    val viewModel: AddTransactionViewModel = hiltViewModel()
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
 
     val dateFormatter = remember(strings.localeTag) {
