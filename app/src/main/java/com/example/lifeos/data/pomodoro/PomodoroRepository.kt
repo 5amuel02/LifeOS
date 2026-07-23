@@ -2,8 +2,9 @@ package com.example.lifeos.data.pomodoro
 
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
+import javax.inject.Inject
 
-class PomodoroRepository(private val dao: PomodoroSessionDao) {
+class PomodoroRepository @Inject constructor(private val dao: PomodoroSessionDao) {
     fun getAllSessions(): Flow<List<PomodoroSessionEntity>> = dao.getAllSessions()
 
     suspend fun recordCompletedSession() {

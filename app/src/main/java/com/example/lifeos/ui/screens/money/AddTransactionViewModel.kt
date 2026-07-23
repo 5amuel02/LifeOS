@@ -1,20 +1,22 @@
 package com.example.lifeos.ui.screens.money
 
-import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.lifeos.data.LifeOSDatabase
 import com.example.lifeos.data.money.TransactionCategory
 import com.example.lifeos.data.money.TransactionRepository
 import com.example.lifeos.data.money.TransactionType
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import javax.inject.Inject
 
-class AddTransactionViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = TransactionRepository(LifeOSDatabase.getInstance(application).transactionDao())
+@HiltViewModel
+class AddTransactionViewModel @Inject constructor(
+    private val repository: TransactionRepository,
+) : ViewModel() {
 
     var type by mutableStateOf(TransactionType.EXPENSE)
         private set

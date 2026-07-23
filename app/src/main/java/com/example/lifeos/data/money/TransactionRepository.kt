@@ -2,8 +2,9 @@ package com.example.lifeos.data.money
 
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
+import javax.inject.Inject
 
-class TransactionRepository(private val dao: TransactionDao) {
+class TransactionRepository @Inject constructor(private val dao: TransactionDao) {
     fun getAllTransactions(): Flow<List<TransactionEntity>> = dao.getAllTransactions()
 
     suspend fun addTransaction(

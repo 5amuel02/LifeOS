@@ -8,6 +8,9 @@ A personal life-management Android app built entirely in **Kotlin + Jetpack Comp
   <a href="https://github.com/5amuel02/LifeOS/releases/latest">
     <img src="https://img.shields.io/github/v/release/5amuel02/LifeOS?label=Download%20APK&style=for-the-badge&color=4F46E5" alt="Download latest APK" />
   </a>
+  <a href="https://github.com/5amuel02/LifeOS/actions/workflows/android.yml">
+    <img src="https://github.com/5amuel02/LifeOS/actions/workflows/android.yml/badge.svg" alt="Android CI" />
+  </a>
 </p>
 
 ## Install
@@ -61,9 +64,10 @@ A few things worth a closer look if you're reviewing the code:
 
 - **UI:** Jetpack Compose, Material 3 (dynamic color / Material You), Navigation Compose
 - **Data:** Room (structured data), DataStore Preferences (settings)
-- **Architecture:** `AndroidViewModel` + `StateFlow`, unidirectional data flow, no DI framework — plain constructor injection kept the codebase small and readable at this scale
+- **Architecture:** ViewModel + `StateFlow`, unidirectional data flow. **Hilt** for dependency injection — DAOs are provided by a `DatabaseModule` and injected into repositories and `@HiltViewModel`s via constructors (the Notes / Money / Pomodoro ViewModels are migrated; the rest are being moved over incrementally)
 - **Async:** Kotlin Coroutines & Flow throughout
-- **Build:** Gradle Kotlin DSL, version catalogs (`libs.versions.toml`), KSP for Room codegen
+- **Testing:** 21 JUnit4 unit tests — pure calculators, repositories (in-memory fake DAOs), and a ViewModel (Turbine + `kotlinx-coroutines-test`) — run in **GitHub Actions CI** on every push
+- **Build:** Gradle Kotlin DSL, version catalogs (`libs.versions.toml`), KSP for Room & Hilt codegen
 
 ## Project structure
 
@@ -71,9 +75,12 @@ A few things worth a closer look if you're reviewing the code:
 app/src/main/java/com/example/lifeos/
 ├── core/           # audio synthesis, bilingual strings, theme
 ├── data/           # Room entities/DAOs/repositories, one per feature
+├── di/             # Hilt modules (database + DAO providers)
 ├── navigation/      # NavHost + bottom nav
 └── ui/screens/      # one package per module (habit, jadwal, belajar, money, ...)
 ```
+
+Unit tests live under `app/src/test/` (pure calculators, repositories with fake DAOs, and a ViewModel test) and run on every push via [`.github/workflows/android.yml`](.github/workflows/android.yml).
 
 Each feature is self-contained: its own Entity, DAO, Repository, ViewModel, and Screen — no shared "god" repository or view model.
 

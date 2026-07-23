@@ -1,8 +1,9 @@
 package com.example.lifeos.data.notes
 
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class ChecklistRepository(private val dao: ChecklistItemDao) {
+class ChecklistRepository @Inject constructor(private val dao: ChecklistItemDao) {
     fun getItemsForNote(noteId: Long): Flow<List<ChecklistItemEntity>> = dao.getItemsForNote(noteId)
 
     suspend fun getItemsForNoteOnce(noteId: Long): List<ChecklistItemEntity> = dao.getItemsForNoteOnce(noteId)
