@@ -1,6 +1,5 @@
 ﻿package com.example.lifeos.ui.screens.savings
 
-import android.app.Application
 import androidx.compose.animation.core.EaseOutCubic
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -45,11 +44,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.audio.rememberFeedbackSounds
 import com.example.lifeos.core.strings.LocalStrings
 import com.example.lifeos.data.money.formatRupiah
@@ -65,12 +63,9 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SavingsGoalDetailScreen(goalId: Long, onBack: () -> Unit) {
+fun SavingsGoalDetailScreen(onBack: () -> Unit) {
     val strings = LocalStrings.current
-    val context = LocalContext.current
-    val viewModel: SavingsGoalDetailViewModel = viewModel(
-        factory = SavingsGoalDetailViewModelFactory(context.applicationContext as Application, goalId)
-    )
+    val viewModel: SavingsGoalDetailViewModel = hiltViewModel()
     val goal by viewModel.goal.collectAsStateWithLifecycle()
     val deposits by viewModel.deposits.collectAsStateWithLifecycle()
     val sounds = rememberFeedbackSounds()

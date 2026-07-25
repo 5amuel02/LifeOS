@@ -2,8 +2,9 @@ package com.example.lifeos.data.speedmath
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import javax.inject.Inject
 
-class SpeedMathRepository(private val dao: SpeedMathResultDao) {
+class SpeedMathRepository @Inject constructor(private val dao: SpeedMathResultDao) {
     fun getBestResult(): Flow<SpeedMathResultEntity?> = dao.getBestResult()
 
     suspend fun getBestScoreOnce(): Int = dao.getBestResult().first()?.score ?: 0

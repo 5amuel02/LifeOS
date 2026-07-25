@@ -37,7 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.audio.rememberFeedbackSounds
 import com.example.lifeos.core.strings.LocalStrings
 import com.example.lifeos.ui.screens.belajar.matematika.MathGame
@@ -50,7 +50,7 @@ private val TILE_GAP = 4.dp
 @Composable
 fun PuzzleScreen(onBack: () -> Unit) {
     val strings = LocalStrings.current
-    val viewModel: PuzzleGameViewModel = viewModel()
+    val viewModel: PuzzleGameViewModel = hiltViewModel()
     val sounds = rememberFeedbackSounds()
     val bestMoves by viewModel.bestMoves.collectAsStateWithLifecycle()
 

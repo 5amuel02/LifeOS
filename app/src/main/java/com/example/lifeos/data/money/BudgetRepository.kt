@@ -1,8 +1,9 @@
 package com.example.lifeos.data.money
 
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class BudgetRepository(private val dao: BudgetDao) {
+class BudgetRepository @Inject constructor(private val dao: BudgetDao) {
     fun getAllBudgets(): Flow<List<BudgetEntity>> = dao.getAllBudgets()
 
     suspend fun setBudget(category: TransactionCategory, monthlyLimit: Long) {

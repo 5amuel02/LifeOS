@@ -2,8 +2,9 @@ package com.example.lifeos.data.puzzle
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import javax.inject.Inject
 
-class PuzzleRepository(private val dao: PuzzleResultDao) {
+class PuzzleRepository @Inject constructor(private val dao: PuzzleResultDao) {
     fun getBestResult(): Flow<PuzzleResultEntity?> = dao.getBestResult()
 
     suspend fun getBestMovesOnce(): Int? = dao.getBestResult().first()?.moves

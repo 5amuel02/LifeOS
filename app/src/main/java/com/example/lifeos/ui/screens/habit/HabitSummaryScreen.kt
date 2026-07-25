@@ -40,7 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.strings.LocalStrings
 import com.example.lifeos.ui.screens.common.PlaceholderScreen
 import java.time.Instant
@@ -52,7 +52,7 @@ import java.util.Locale
 @Composable
 fun HabitSummaryScreen(onBack: () -> Unit) {
     val strings = LocalStrings.current
-    val viewModel: HabitSummaryViewModel = viewModel()
+    val viewModel: HabitSummaryViewModel = hiltViewModel()
     val selectedDate by viewModel.selectedDate.collectAsStateWithLifecycle()
     val summaryItems by viewModel.summaryItems.collectAsStateWithLifecycle()
     var showDatePicker by rememberSaveable { mutableStateOf(false) }

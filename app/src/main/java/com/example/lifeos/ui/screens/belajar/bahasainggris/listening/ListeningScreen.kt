@@ -59,7 +59,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.audio.FeedbackSounds
 import com.example.lifeos.core.audio.rememberFeedbackSounds
 import com.example.lifeos.core.strings.LifeOSStrings
@@ -69,7 +69,7 @@ import com.example.lifeos.core.strings.LocalStrings
 @Composable
 fun ListeningScreen(onBack: () -> Unit) {
     val strings = LocalStrings.current
-    val viewModel: ListeningViewModel = viewModel()
+    val viewModel: ListeningViewModel = hiltViewModel()
     val sounds = rememberFeedbackSounds()
     var selectedQuestionId by rememberSaveable { mutableStateOf<Int?>(null) }
 

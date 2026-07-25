@@ -1,28 +1,32 @@
 package com.example.lifeos.ui.screens.notes
 
-import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.lifeos.data.LifeOSDatabase
 import com.example.lifeos.data.notes.ChecklistItemUi
 import com.example.lifeos.data.notes.ChecklistRepository
 import com.example.lifeos.data.notes.NoteRepository
 import com.example.lifeos.data.notes.NoteType
 import com.example.lifeos.data.notes.parseNoteColorString
 import com.example.lifeos.data.notes.toNoteColorString
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.UUID
+import javax.inject.Inject
 
-class NoteEditorViewModel(application: Application, private val noteId: Long?) : AndroidViewModel(application) {
-    private val database = LifeOSDatabase.getInstance(application)
-    private val repository = NoteRepository(database.noteDao())
-    private val checklistRepository = ChecklistRepository(database.checklistItemDao())
+@HiltViewModel
+class NoteEditorViewModel @Inject constructor(
+    private val repository: NoteRepository,
+    private val checklistRepository: ChecklistRepository,
+    savedStateHandle: SavedStateHandle,
+) : ViewModel() {
+    // "noteId" matches the nav argument key declared for this route in LifeOSNavHost;
+    // -1L is the route's "no note" default (Hilt reads it straight from SavedStateHandle).
+    private val noteId: Long? = savedStateHandle.get<Long>("noteId")?.takeIf { it != -1L }
 
     var title by mutableStateOf("")
         private set
@@ -97,15 +101,5 @@ class NoteEditorViewModel(application: Application, private val noteId: Long?) :
             repository.deleteNote(id)
             onDeleted()
         }
-    }
-}
-
-class NoteEditorViewModelFactory(
-    private val application: Application,
-    private val noteId: Long?,
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return NoteEditorViewModel(application, noteId) as T
     }
 }

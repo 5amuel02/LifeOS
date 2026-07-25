@@ -44,7 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.strings.AppLanguage
 import com.example.lifeos.core.strings.LocalStrings
 import com.example.lifeos.data.settings.ThemeMode
@@ -63,7 +63,7 @@ private const val LONG_BREAK_STEP_MINUTES = 5
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(onBack: () -> Unit) {
-    val viewModel: SettingsViewModel = viewModel()
+    val viewModel: SettingsViewModel = hiltViewModel()
     val settings by viewModel.settings.collectAsStateWithLifecycle()
     val strings = LocalStrings.current
     var showClearConfirm by rememberSaveable { mutableStateOf(false) }

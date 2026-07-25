@@ -1,6 +1,6 @@
 package com.example.lifeos.ui.screens.belajar.matematika.speedmath
 
-import android.app.Application
+import android.content.Context
 import android.media.MediaPlayer
 import android.os.SystemClock
 import androidx.compose.runtime.getValue
@@ -8,10 +8,11 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.lifeos.data.LifeOSDatabase
 import com.example.lifeos.data.speedmath.SpeedMathRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlin.random.Random
+import javax.inject.Inject
 
 enum class SpeedMathState { IDLE, PLAYING, GAME_OVER }
 
@@ -31,8 +33,11 @@ private const val URGENT_TICK_FRACTION_THRESHOLD = 0.4f
 /** Background music resource name; drop `speed_math_bgm.mp3` (or .ogg) into res/raw to enable it. */
 private const val BACKGROUND_MUSIC_RAW_NAME = "speed_math_bgm"
 
-class SpeedMathViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = SpeedMathRepository(LifeOSDatabase.getInstance(application).speedMathResultDao())
+@HiltViewModel
+class SpeedMathViewModel @Inject constructor(
+    private val repository: SpeedMathRepository,
+    @ApplicationContext private val context: Context,
+) : ViewModel() {
     private val random = Random(System.nanoTime())
     private val soundEffects = SpeedMathSoundEffects()
     private var countdownJob: Job? = null
@@ -154,7 +159,6 @@ class SpeedMathViewModel(application: Application) : AndroidViewModel(applicatio
 
     private fun startBackgroundMusicIfAvailable() {
         if (backgroundMusicPlayer != null) return
-        val context = getApplication<Application>()
         val resId = context.resources.getIdentifier(BACKGROUND_MUSIC_RAW_NAME, "raw", context.packageName)
         if (resId == 0) return
         backgroundMusicPlayer = runCatching {

@@ -52,7 +52,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.audio.rememberFeedbackSounds
 import com.example.lifeos.core.strings.LifeOSStrings
 import com.example.lifeos.core.strings.LocalStrings
@@ -66,7 +66,7 @@ private fun formatMinuteOfDay(minuteOfDay: Int): String =
 @Composable
 fun HabitScreen(onOpenSummary: () -> Unit = {}) {
     val strings = LocalStrings.current
-    val viewModel: HabitViewModel = viewModel()
+    val viewModel: HabitViewModel = hiltViewModel()
     val sounds = rememberFeedbackSounds()
     val habits by viewModel.habits.collectAsStateWithLifecycle()
     var showAddDialog by rememberSaveable { mutableStateOf(false) }

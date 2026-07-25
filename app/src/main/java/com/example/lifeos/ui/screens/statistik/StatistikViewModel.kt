@@ -1,17 +1,19 @@
 package com.example.lifeos.ui.screens.statistik
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.lifeos.data.LifeOSDatabase
 import com.example.lifeos.data.habit.HabitRepository
 import com.example.lifeos.data.habit.calculateStreak
+import com.example.lifeos.data.notes.NoteDao
 import com.example.lifeos.data.pomodoro.PomodoroRepository
+import com.example.lifeos.data.targethidup.TargetHidupDao
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import java.time.LocalDate
+import javax.inject.Inject
 
 data class DayValue(val dateEpochDay: Long, val value: Float)
 
@@ -26,17 +28,20 @@ data class StatistikUiState(
     val habitRateLast7Days: List<DayValue> = emptyList(),
 )
 
-class StatistikViewModel(application: Application) : AndroidViewModel(application) {
-    private val database = LifeOSDatabase.getInstance(application)
-    private val habitRepository = HabitRepository(database.habitDao(), database.habitCompletionDao())
-    private val pomodoroRepository = PomodoroRepository(database.pomodoroSessionDao())
+@HiltViewModel
+class StatistikViewModel @Inject constructor(
+    private val habitRepository: HabitRepository,
+    private val pomodoroRepository: PomodoroRepository,
+    private val noteDao: NoteDao,
+    private val targetHidupDao: TargetHidupDao,
+) : ViewModel() {
 
     val uiState: StateFlow<StatistikUiState> = combine(
         habitRepository.getAllHabits(),
         habitRepository.getAllCompletions(),
         pomodoroRepository.getAllSessions(),
-        database.noteDao().getAllNotes(),
-        database.targetHidupDao().getAll(),
+        noteDao.getAllNotes(),
+        targetHidupDao.getAll(),
     ) { habits, completions, sessions, notes, goals ->
         val today = LocalDate.now().toEpochDay()
         val last7Days = (6 downTo 0).map { today - it }

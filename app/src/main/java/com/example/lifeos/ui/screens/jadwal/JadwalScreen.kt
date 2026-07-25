@@ -53,7 +53,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.audio.rememberFeedbackSounds
 import com.example.lifeos.core.strings.LifeOSStrings
 import com.example.lifeos.core.strings.LocalStrings
@@ -73,7 +73,7 @@ private fun formatMinuteOfDay(minuteOfDay: Int): String =
 @Composable
 fun JadwalScreen(onBack: () -> Unit) {
     val strings = LocalStrings.current
-    val viewModel: JadwalViewModel = viewModel()
+    val viewModel: JadwalViewModel = hiltViewModel()
     val sounds = rememberFeedbackSounds()
     val items by viewModel.items.collectAsStateWithLifecycle()
 
