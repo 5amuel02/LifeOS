@@ -1,6 +1,5 @@
 package com.example.lifeos.ui.screens.pomodoro
 
-import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.os.VibrationEffect
@@ -10,12 +9,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.lifeos.data.LifeOSDatabase
 import com.example.lifeos.data.pomodoro.PomodoroRepository
 import com.example.lifeos.data.settings.AppSettings
 import com.example.lifeos.data.settings.SettingsRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,15 +24,19 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import javax.inject.Inject
 
 private const val SESSIONS_BEFORE_LONG_BREAK = 4
 private const val PHASE_END_VIBRATION_MS = 400L
 
 enum class PomodoroPhase { FOCUS, SHORT_BREAK, LONG_BREAK }
 
-class PomodoroViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = PomodoroRepository(LifeOSDatabase.getInstance(application).pomodoroSessionDao())
-    private val settingsRepository = SettingsRepository(application)
+@HiltViewModel
+class PomodoroViewModel @Inject constructor(
+    private val repository: PomodoroRepository,
+    private val settingsRepository: SettingsRepository,
+    @ApplicationContext private val context: Context,
+) : ViewModel() {
     private var timerJob: Job? = null
     private var currentSettings = AppSettings()
 
@@ -124,7 +128,6 @@ class PomodoroViewModel(application: Application) : AndroidViewModel(application
     }
 
     private fun vibrate() {
-        val context = getApplication<Application>()
         val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val manager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
             manager.defaultVibrator

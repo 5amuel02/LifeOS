@@ -1,19 +1,20 @@
 package com.example.lifeos.ui.screens.savings
 
-import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.lifeos.data.LifeOSDatabase
 import com.example.lifeos.data.savings.SavingsRepository
 import com.example.lifeos.data.savings.estimateMonthsToTarget
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AddSavingsGoalViewModel(application: Application) : AndroidViewModel(application) {
-    private val database = LifeOSDatabase.getInstance(application)
-    private val repository = SavingsRepository(database.savingsGoalDao(), database.savingsDepositDao())
+@HiltViewModel
+class AddSavingsGoalViewModel @Inject constructor(
+    private val repository: SavingsRepository,
+) : ViewModel() {
 
     var name by mutableStateOf("")
         private set

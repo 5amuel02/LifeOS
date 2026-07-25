@@ -64,7 +64,7 @@ A few things worth a closer look if you're reviewing the code:
 
 - **UI:** Jetpack Compose, Material 3 (dynamic color / Material You), Navigation Compose
 - **Data:** Room (structured data), DataStore Preferences (settings)
-- **Architecture:** ViewModel + `StateFlow`, unidirectional data flow. **Hilt** for dependency injection — DAOs are provided by a `DatabaseModule` and injected into repositories and `@HiltViewModel`s via constructors (the Notes / Money / Pomodoro ViewModels are migrated; the rest are being moved over incrementally)
+- **Architecture:** ViewModel + `StateFlow`, unidirectional data flow. **Hilt** for dependency injection — DAOs are provided by a `DatabaseModule` and injected into repositories and `@HiltViewModel`s via constructors, including `SavedStateHandle`-based injection for screens that take a nav argument (note/goal id) instead of a manual `ViewModelProvider.Factory`
 - **Async:** Kotlin Coroutines & Flow throughout
 - **Testing:** 21 JUnit4 unit tests — pure calculators, repositories (in-memory fake DAOs), and a ViewModel (Turbine + `kotlinx-coroutines-test`) — run in **GitHub Actions CI** on every push
 - **Build:** Gradle Kotlin DSL, version catalogs (`libs.versions.toml`), KSP for Room & Hilt codegen

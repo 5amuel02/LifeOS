@@ -50,7 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.audio.rememberFeedbackSounds
 import com.example.lifeos.core.strings.LifeOSStrings
 import com.example.lifeos.core.strings.LocalStrings
@@ -66,7 +66,7 @@ import java.util.Locale
 @Composable
 fun TargetHidupScreen(onBack: () -> Unit) {
     val strings = LocalStrings.current
-    val viewModel: TargetHidupViewModel = viewModel()
+    val viewModel: TargetHidupViewModel = hiltViewModel()
     val sounds = rememberFeedbackSounds()
     val goals by viewModel.goals.collectAsStateWithLifecycle()
 

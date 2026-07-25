@@ -64,7 +64,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.strings.LifeOSStrings
 import com.example.lifeos.core.strings.LocalStrings
 import com.example.lifeos.data.money.BudgetProgress
@@ -79,7 +79,7 @@ import kotlin.math.abs
 @Composable
 fun MoneyInsightsTabContent(modifier: Modifier = Modifier) {
     val strings = LocalStrings.current
-    val viewModel: MoneyInsightsViewModel = viewModel()
+    val viewModel: MoneyInsightsViewModel = hiltViewModel()
     val streak by viewModel.streak.collectAsStateWithLifecycle()
     val monthInsight by viewModel.monthInsight.collectAsStateWithLifecycle()
     val breakdown by viewModel.categoryBreakdown.collectAsStateWithLifecycle()

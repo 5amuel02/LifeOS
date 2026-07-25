@@ -1,19 +1,25 @@
 package com.example.lifeos.ui.screens.belajar.bahasainggris.listening
 
-import android.app.Application
+import android.content.Context
 import android.speech.tts.TextToSpeech
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
+import javax.inject.Inject
 
 enum class ListeningAnswerStatus { UNANSWERED, CORRECT, INCORRECT }
 
 private const val UTTERANCE_ID = "listening_question"
 
-class ListeningViewModel(application: Application) : AndroidViewModel(application), TextToSpeech.OnInitListener {
+@HiltViewModel
+class ListeningViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+) : ViewModel(), TextToSpeech.OnInitListener {
     private var tts: TextToSpeech? = null
     private val statuses = mutableStateMapOf<Int, ListeningAnswerStatus>()
     private val selectedChoices = mutableStateMapOf<Int, Int>()
@@ -27,7 +33,7 @@ class ListeningViewModel(application: Application) : AndroidViewModel(applicatio
         get() = statuses.values.count { it == ListeningAnswerStatus.CORRECT }
 
     init {
-        tts = TextToSpeech(application, this)
+        tts = TextToSpeech(context, this)
     }
 
     override fun onInit(status: Int) {

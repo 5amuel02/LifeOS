@@ -61,7 +61,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.strings.LifeOSStrings
 import com.example.lifeos.core.strings.LocalStrings
 import com.example.lifeos.ui.screens.belajar.matematika.MathGame
@@ -74,7 +74,7 @@ import kotlin.random.Random
 @Composable
 fun SpeedMathScreen(onBack: () -> Unit) {
     val strings = LocalStrings.current
-    val viewModel: SpeedMathViewModel = viewModel()
+    val viewModel: SpeedMathViewModel = hiltViewModel()
     val bestScore by viewModel.bestScore.collectAsStateWithLifecycle()
 
     Scaffold(

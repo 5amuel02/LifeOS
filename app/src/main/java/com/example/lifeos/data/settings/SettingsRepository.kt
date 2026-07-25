@@ -6,8 +6,10 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.lifeos.core.strings.AppLanguage
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 enum class ThemeMode { LIGHT, DARK, SYSTEM }
 
@@ -25,7 +27,7 @@ data class AppSettings(
 
 private val Context.settingsDataStore by preferencesDataStore(name = "lifeos_settings")
 
-class SettingsRepository(private val context: Context) {
+class SettingsRepository @Inject constructor(@ApplicationContext private val context: Context) {
     private object Keys {
         val THEME_MODE = stringPreferencesKey("theme_mode")
         val LANGUAGE = stringPreferencesKey("language")

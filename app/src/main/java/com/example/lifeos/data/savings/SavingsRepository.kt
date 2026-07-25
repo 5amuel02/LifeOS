@@ -2,8 +2,9 @@ package com.example.lifeos.data.savings
 
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
+import javax.inject.Inject
 
-class SavingsRepository(
+class SavingsRepository @Inject constructor(
     private val goalDao: SavingsGoalDao,
     private val depositDao: SavingsDepositDao,
 ) {

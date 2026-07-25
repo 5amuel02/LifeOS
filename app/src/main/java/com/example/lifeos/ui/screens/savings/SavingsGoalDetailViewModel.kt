@@ -1,23 +1,26 @@
 package com.example.lifeos.ui.screens.savings
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.lifeos.data.LifeOSDatabase
 import com.example.lifeos.data.savings.SavingsDepositEntity
 import com.example.lifeos.data.savings.SavingsGoalEntity
 import com.example.lifeos.data.savings.SavingsRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import javax.inject.Inject
 
-class SavingsGoalDetailViewModel(application: Application, private val goalId: Long) : AndroidViewModel(application) {
-    private val database = LifeOSDatabase.getInstance(application)
-    private val repository = SavingsRepository(database.savingsGoalDao(), database.savingsDepositDao())
+@HiltViewModel
+class SavingsGoalDetailViewModel @Inject constructor(
+    private val repository: SavingsRepository,
+    savedStateHandle: SavedStateHandle,
+) : ViewModel() {
+    // "goalId" matches the required nav argument key declared for this route in LifeOSNavHost.
+    private val goalId: Long = savedStateHandle.get<Long>("goalId") ?: 0L
 
     val goal: StateFlow<SavingsGoalEntity?> = repository.getGoalById(goalId)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
@@ -39,15 +42,5 @@ class SavingsGoalDetailViewModel(application: Application, private val goalId: L
             repository.deleteGoal(goalId)
             onDeleted()
         }
-    }
-}
-
-class SavingsGoalDetailViewModelFactory(
-    private val application: Application,
-    private val goalId: Long,
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return SavingsGoalDetailViewModel(application, goalId) as T
     }
 }

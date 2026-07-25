@@ -42,7 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.strings.LifeOSStrings
 import com.example.lifeos.core.strings.LocalStrings
 import com.example.lifeos.data.chat.ChatMessageEntity
@@ -52,7 +52,7 @@ import com.example.lifeos.ui.screens.common.PlaceholderScreen
 @Composable
 fun AiAssistantScreen(onBack: () -> Unit) {
     val strings = LocalStrings.current
-    val viewModel: AiAssistantViewModel = viewModel()
+    val viewModel: AiAssistantViewModel = hiltViewModel()
     val messages by viewModel.messages.collectAsStateWithLifecycle()
     var input by rememberSaveable { mutableStateOf("") }
     var showClearDialog by rememberSaveable { mutableStateOf(false) }

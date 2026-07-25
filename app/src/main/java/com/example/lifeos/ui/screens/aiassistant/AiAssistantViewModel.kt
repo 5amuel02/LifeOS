@@ -1,15 +1,16 @@
 package com.example.lifeos.ui.screens.aiassistant
 
-import android.app.Application
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.lifeos.data.LifeOSDatabase
 import com.example.lifeos.data.chat.ChatMessageEntity
 import com.example.lifeos.data.chat.ChatRepository
 import com.example.lifeos.data.chat.DeviceIdProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +23,7 @@ import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.charset.StandardCharsets
+import javax.inject.Inject
 
 sealed interface ChatError {
     data class ApiFailure(val message: String) : ChatError
@@ -38,9 +40,12 @@ private const val MAX_HISTORY_MESSAGES = 20
 private const val CONNECT_TIMEOUT_MS = 15_000
 private const val READ_TIMEOUT_MS = 30_000
 
-class AiAssistantViewModel(application: Application) : AndroidViewModel(application) {
-    private val chatRepository = ChatRepository(LifeOSDatabase.getInstance(application).chatMessageDao())
-    private val deviceId = DeviceIdProvider.getOrCreate(application)
+@HiltViewModel
+class AiAssistantViewModel @Inject constructor(
+    private val chatRepository: ChatRepository,
+    @ApplicationContext context: Context,
+) : ViewModel() {
+    private val deviceId = DeviceIdProvider.getOrCreate(context)
 
     val messages: StateFlow<List<ChatMessageEntity>> = chatRepository.getAll()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())

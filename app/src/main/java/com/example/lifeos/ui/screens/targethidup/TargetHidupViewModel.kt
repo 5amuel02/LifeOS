@@ -1,19 +1,20 @@
 package com.example.lifeos.ui.screens.targethidup
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.lifeos.data.LifeOSDatabase
 import com.example.lifeos.data.targethidup.TargetHidupEntity
 import com.example.lifeos.data.targethidup.TargetHidupRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TargetHidupViewModel(application: Application) : AndroidViewModel(application) {
-    private val database = LifeOSDatabase.getInstance(application)
-    private val repository = TargetHidupRepository(database.targetHidupDao())
+@HiltViewModel
+class TargetHidupViewModel @Inject constructor(
+    private val repository: TargetHidupRepository,
+) : ViewModel() {
 
     val goals: StateFlow<List<TargetHidupEntity>> = repository.getAll()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())

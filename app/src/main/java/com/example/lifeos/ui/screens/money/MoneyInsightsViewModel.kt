@@ -1,9 +1,7 @@
 package com.example.lifeos.ui.screens.money
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.lifeos.data.LifeOSDatabase
 import com.example.lifeos.data.money.BudgetProgress
 import com.example.lifeos.data.money.BudgetRepository
 import com.example.lifeos.data.money.CategoryBreakdown
@@ -14,17 +12,20 @@ import com.example.lifeos.data.money.calculateLoggingStreak
 import com.example.lifeos.data.money.computeBudgetProgress
 import com.example.lifeos.data.money.computeCategoryBreakdown
 import com.example.lifeos.data.money.computeMonthInsight
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MoneyInsightsViewModel(application: Application) : AndroidViewModel(application) {
-    private val database = LifeOSDatabase.getInstance(application)
-    private val transactionRepository = TransactionRepository(database.transactionDao())
-    private val budgetRepository = BudgetRepository(database.budgetDao())
+@HiltViewModel
+class MoneyInsightsViewModel @Inject constructor(
+    private val transactionRepository: TransactionRepository,
+    private val budgetRepository: BudgetRepository,
+) : ViewModel() {
 
     private val transactions = transactionRepository.getAllTransactions()
 
