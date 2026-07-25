@@ -141,22 +141,18 @@ fun LifeOSNavHost(navController: NavHostController, innerPadding: PaddingValues)
         composable(
             route = "$NOTE_EDITOR_ROUTE?$NOTE_ID_ARG={$NOTE_ID_ARG}",
             arguments = listOf(navArgument(NOTE_ID_ARG) { type = NavType.LongType; defaultValue = -1L })
-        ) { backStackEntry ->
-            val noteId = backStackEntry.arguments?.getLong(NOTE_ID_ARG) ?: -1L
-            NoteEditorScreen(
-                noteId = noteId.takeIf { it != -1L },
-                onBack = { navController.popBackStack() }
-            )
+        ) {
+            // noteId flows into NoteEditorViewModel via Hilt's SavedStateHandle injection,
+            // populated automatically from this route's nav argument.
+            NoteEditorScreen(onBack = { navController.popBackStack() })
         }
         composable(
             route = "$DRAWING_EDITOR_ROUTE?$NOTE_ID_ARG={$NOTE_ID_ARG}",
             arguments = listOf(navArgument(NOTE_ID_ARG) { type = NavType.LongType; defaultValue = -1L })
-        ) { backStackEntry ->
-            val noteId = backStackEntry.arguments?.getLong(NOTE_ID_ARG) ?: -1L
-            DrawingNoteScreen(
-                noteId = noteId.takeIf { it != -1L },
-                onBack = { navController.popBackStack() }
-            )
+        ) {
+            // noteId flows into DrawingNoteViewModel via Hilt's SavedStateHandle injection,
+            // populated automatically from this route's nav argument.
+            DrawingNoteScreen(onBack = { navController.popBackStack() })
         }
         composable(Screen.Habit.route) {
             HabitScreen(onOpenSummary = { navController.navigate(HABIT_SUMMARY_ROUTE) })
@@ -388,12 +384,10 @@ fun LifeOSNavHost(navController: NavHostController, innerPadding: PaddingValues)
         composable(
             route = "$SAVINGS_GOAL_DETAIL_ROUTE/{$SAVINGS_GOAL_ID_ARG}",
             arguments = listOf(navArgument(SAVINGS_GOAL_ID_ARG) { type = NavType.LongType })
-        ) { backStackEntry ->
-            val goalId = backStackEntry.arguments?.getLong(SAVINGS_GOAL_ID_ARG) ?: 0L
-            SavingsGoalDetailScreen(
-                goalId = goalId,
-                onBack = { navController.popBackStack() }
-            )
+        ) {
+            // goalId flows into SavingsGoalDetailViewModel via Hilt's SavedStateHandle
+            // injection, populated automatically from this route's nav argument.
+            SavingsGoalDetailScreen(onBack = { navController.popBackStack() })
         }
     }
 }

@@ -1,8 +1,9 @@
 package com.example.lifeos.data.targethidup
 
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class TargetHidupRepository(private val dao: TargetHidupDao) {
+class TargetHidupRepository @Inject constructor(private val dao: TargetHidupDao) {
     fun getAll(): Flow<List<TargetHidupEntity>> = dao.getAll()
 
     suspend fun addGoal(title: String, targetDateEpochDay: Long?): Long {

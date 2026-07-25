@@ -1,6 +1,6 @@
 package com.example.lifeos.ui.screens.notes
 
-import android.app.Application
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -20,17 +20,18 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.lifeos.data.LifeOSDatabase
 import com.example.lifeos.data.notes.DrawingFileStore
 import com.example.lifeos.data.notes.NoteRepository
 import com.example.lifeos.data.notes.NoteType
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 data class DrawStroke(
     val points: List<Offset>,
@@ -49,8 +50,15 @@ val drawingColors = listOf(
 
 val drawingWidths = listOf(4f, 8f, 14f)
 
-class DrawingNoteViewModel(application: Application, private val noteId: Long?) : AndroidViewModel(application) {
-    private val repository = NoteRepository(LifeOSDatabase.getInstance(application).noteDao())
+@HiltViewModel
+class DrawingNoteViewModel @Inject constructor(
+    private val repository: NoteRepository,
+    @ApplicationContext private val context: Context,
+    savedStateHandle: SavedStateHandle,
+) : ViewModel() {
+    // "noteId" matches the nav argument key declared for this route in LifeOSNavHost;
+    // -1L is the route's "no note" default (Hilt reads it straight from SavedStateHandle).
+    private val noteId: Long? = savedStateHandle.get<Long>("noteId")?.takeIf { it != -1L }
 
     var title by mutableStateOf("")
         private set
@@ -72,7 +80,7 @@ class DrawingNoteViewModel(application: Application, private val noteId: Long?) 
             viewModelScope.launch {
                 repository.getNoteById(noteId)?.let { note -> title = note.title }
                 withContext(Dispatchers.IO) {
-                    DrawingFileStore.load(getApplication(), noteId)
+                    DrawingFileStore.load(context, noteId)
                 }?.let { bitmap -> backgroundBitmap = bitmap.asImageBitmap() }
                 isLoading = false
             }
@@ -115,7 +123,7 @@ class DrawingNoteViewModel(application: Application, private val noteId: Long?) 
             val savedNoteId = repository.saveNote(noteId, title, "", "DEFAULT", NoteType.DRAWING.name)
             val bitmap = renderToBitmap(canvasSize, backgroundBitmap, strokes)
             withContext(Dispatchers.IO) {
-                DrawingFileStore.save(getApplication(), savedNoteId, bitmap)
+                DrawingFileStore.save(context, savedNoteId, bitmap)
             }
             onSaved()
         }
@@ -125,7 +133,7 @@ class DrawingNoteViewModel(application: Application, private val noteId: Long?) 
         val id = noteId ?: return
         viewModelScope.launch {
             repository.deleteNote(id)
-            withContext(Dispatchers.IO) { DrawingFileStore.delete(getApplication(), id) }
+            withContext(Dispatchers.IO) { DrawingFileStore.delete(context, id) }
             onDeleted()
         }
     }
@@ -161,15 +169,5 @@ fun androidx.compose.ui.graphics.drawscope.DrawScope.drawStroke(stroke: DrawStro
         )
     } else if (stroke.points.size == 1) {
         drawCircle(color = stroke.color, radius = stroke.widthPx / 2, center = stroke.points.first())
-    }
-}
-
-class DrawingNoteViewModelFactory(
-    private val application: Application,
-    private val noteId: Long?,
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return DrawingNoteViewModel(application, noteId) as T
     }
 }

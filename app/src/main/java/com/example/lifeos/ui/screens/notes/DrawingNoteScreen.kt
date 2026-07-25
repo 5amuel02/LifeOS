@@ -1,6 +1,5 @@
 ﻿package com.example.lifeos.ui.screens.notes
 
-import android.app.Application
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -46,20 +45,16 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.strings.LocalStrings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DrawingNoteScreen(noteId: Long?, onBack: () -> Unit) {
+fun DrawingNoteScreen(onBack: () -> Unit) {
     val strings = LocalStrings.current
-    val context = LocalContext.current
-    val viewModel: DrawingNoteViewModel = viewModel(
-        factory = DrawingNoteViewModelFactory(context.applicationContext as Application, noteId)
-    )
+    val viewModel: DrawingNoteViewModel = hiltViewModel()
     var canvasSize by remember { mutableStateOf(IntSize.Zero) }
     var showClearConfirm by rememberSaveable { mutableStateOf(false) }
 

@@ -22,7 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.strings.LocalStrings
 import com.example.lifeos.ui.screens.money.ThousandsSeparatorVisualTransformation
 
@@ -30,7 +30,7 @@ import com.example.lifeos.ui.screens.money.ThousandsSeparatorVisualTransformatio
 @Composable
 fun AddSavingsGoalScreen(onBack: () -> Unit) {
     val strings = LocalStrings.current
-    val viewModel: AddSavingsGoalViewModel = viewModel()
+    val viewModel: AddSavingsGoalViewModel = hiltViewModel()
 
     Scaffold(
         topBar = {

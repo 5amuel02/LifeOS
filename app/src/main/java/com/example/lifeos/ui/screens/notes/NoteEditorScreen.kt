@@ -1,6 +1,5 @@
 ﻿package com.example.lifeos.ui.screens.notes
 
-import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -51,22 +50,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.strings.LocalStrings
 import com.example.lifeos.data.notes.ChecklistItemUi
 import com.example.lifeos.data.notes.presetNoteColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NoteEditorScreen(noteId: Long?, onBack: () -> Unit) {
+fun NoteEditorScreen(onBack: () -> Unit) {
     val strings = LocalStrings.current
-    val context = LocalContext.current
-    val viewModel: NoteEditorViewModel = viewModel(
-        factory = NoteEditorViewModelFactory(context.applicationContext as Application, noteId)
-    )
+    val viewModel: NoteEditorViewModel = hiltViewModel()
     var showCustomColorDialog by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(

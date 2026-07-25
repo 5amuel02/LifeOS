@@ -1,18 +1,20 @@
 package com.example.lifeos.ui.screens.habit
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import android.content.Context
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.lifeos.data.LifeOSDatabase
 import com.example.lifeos.data.habit.HabitRepository
 import com.example.lifeos.data.habit.calculateStreak
 import com.example.lifeos.notifications.HabitReminderScheduler
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import javax.inject.Inject
 
 data class HabitUi(
     val id: Long,
@@ -22,9 +24,11 @@ data class HabitUi(
     val reminderMinuteOfDay: Int?,
 )
 
-class HabitViewModel(application: Application) : AndroidViewModel(application) {
-    private val database = LifeOSDatabase.getInstance(application)
-    private val repository = HabitRepository(database.habitDao(), database.habitCompletionDao())
+@HiltViewModel
+class HabitViewModel @Inject constructor(
+    private val repository: HabitRepository,
+    @ApplicationContext private val context: Context,
+) : ViewModel() {
 
     val habits: StateFlow<List<HabitUi>> = combine(
         repository.getAllHabits(),
@@ -76,6 +80,4 @@ class HabitViewModel(application: Application) : AndroidViewModel(application) {
     fun toggleToday(habit: HabitUi) {
         viewModelScope.launch { repository.toggleToday(habit.id, habit.isDoneToday) }
     }
-
-    private val context get() = getApplication<Application>().applicationContext
 }

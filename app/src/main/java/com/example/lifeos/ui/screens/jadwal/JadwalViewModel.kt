@@ -1,21 +1,25 @@
 package com.example.lifeos.ui.screens.jadwal
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import android.content.Context
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.lifeos.data.LifeOSDatabase
 import com.example.lifeos.data.jadwal.JadwalEntity
 import com.example.lifeos.data.jadwal.JadwalRepository
 import com.example.lifeos.notifications.JadwalReminderScheduler
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import javax.inject.Inject
 
-class JadwalViewModel(application: Application) : AndroidViewModel(application) {
-    private val database = LifeOSDatabase.getInstance(application)
-    private val repository = JadwalRepository(database.jadwalDao())
+@HiltViewModel
+class JadwalViewModel @Inject constructor(
+    private val repository: JadwalRepository,
+    @ApplicationContext private val context: Context,
+) : ViewModel() {
 
     val items: StateFlow<List<JadwalEntity>> = repository.getAll()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
@@ -51,6 +55,4 @@ class JadwalViewModel(application: Application) : AndroidViewModel(application) 
             repository.deleteItem(id)
         }
     }
-
-    private val context get() = getApplication<Application>().applicationContext
 }

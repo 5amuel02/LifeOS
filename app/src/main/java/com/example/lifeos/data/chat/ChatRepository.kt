@@ -1,8 +1,9 @@
 package com.example.lifeos.data.chat
 
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class ChatRepository(private val dao: ChatMessageDao) {
+class ChatRepository @Inject constructor(private val dao: ChatMessageDao) {
     fun getAll(): Flow<List<ChatMessageEntity>> = dao.getAll()
 
     suspend fun getAllOnce(): List<ChatMessageEntity> = dao.getAllOnce()

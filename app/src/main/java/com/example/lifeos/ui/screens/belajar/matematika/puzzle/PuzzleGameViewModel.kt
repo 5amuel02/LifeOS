@@ -1,16 +1,15 @@
 package com.example.lifeos.ui.screens.belajar.matematika.puzzle
 
-import android.app.Application
 import android.os.SystemClock
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.lifeos.data.LifeOSDatabase
 import com.example.lifeos.data.puzzle.PuzzleRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,11 +17,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 private const val TIMER_TICK_MILLIS = 200L
 
-class PuzzleGameViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = PuzzleRepository(LifeOSDatabase.getInstance(application).puzzleResultDao())
+@HiltViewModel
+class PuzzleGameViewModel @Inject constructor(
+    private val repository: PuzzleRepository,
+) : ViewModel() {
     private var timerJob: Job? = null
     private var startedAtRealtime = 0L
 

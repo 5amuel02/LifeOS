@@ -32,7 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.strings.LifeOSStrings
 import com.example.lifeos.core.strings.LocalStrings
 import java.time.LocalTime
@@ -46,7 +46,7 @@ fun BerandaScreen(
     onOpenPomodoro: () -> Unit = {},
 ) {
     val strings = LocalStrings.current
-    val viewModel: BerandaViewModel = viewModel()
+    val viewModel: BerandaViewModel = hiltViewModel()
     val notes by viewModel.notes.collectAsStateWithLifecycle()
     val latestNote = notes.firstOrNull()
     val habitSummary by viewModel.habitSummary.collectAsStateWithLifecycle()

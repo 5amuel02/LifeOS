@@ -41,7 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.strings.LifeOSStrings
 import com.example.lifeos.core.strings.LocalStrings
 
@@ -49,7 +49,7 @@ import com.example.lifeos.core.strings.LocalStrings
 @Composable
 fun PomodoroScreen(onOpenHistory: () -> Unit = {}) {
     val strings = LocalStrings.current
-    val viewModel: PomodoroViewModel = viewModel()
+    val viewModel: PomodoroViewModel = hiltViewModel()
     val sessionsToday by viewModel.sessionsToday.collectAsStateWithLifecycle()
     var showHelp by rememberSaveable { mutableStateOf(false) }
 

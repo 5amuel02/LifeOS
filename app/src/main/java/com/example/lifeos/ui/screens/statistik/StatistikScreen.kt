@@ -59,7 +59,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lifeos.core.strings.LifeOSStrings
 import com.example.lifeos.core.strings.LocalStrings
 import java.time.LocalDate
@@ -71,7 +71,7 @@ import kotlin.math.roundToInt
 @Composable
 fun StatistikScreen(onBack: () -> Unit) {
     val strings = LocalStrings.current
-    val viewModel: StatistikViewModel = viewModel()
+    val viewModel: StatistikViewModel = hiltViewModel()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     val dayFormatter = remember(strings.localeTag) {

@@ -2,8 +2,9 @@ package com.example.lifeos.data.habit
 
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
+import javax.inject.Inject
 
-class HabitRepository(
+class HabitRepository @Inject constructor(
     private val habitDao: HabitDao,
     private val completionDao: HabitCompletionDao,
 ) {

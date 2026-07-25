@@ -1,10 +1,9 @@
 package com.example.lifeos.ui.screens.habit
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.lifeos.data.LifeOSDatabase
 import com.example.lifeos.data.habit.HabitRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -12,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import java.time.LocalDate
+import javax.inject.Inject
 
 data class HabitSummaryItem(
     val id: Long,
@@ -19,9 +19,10 @@ data class HabitSummaryItem(
     val isDone: Boolean,
 )
 
-class HabitSummaryViewModel(application: Application) : AndroidViewModel(application) {
-    private val database = LifeOSDatabase.getInstance(application)
-    private val repository = HabitRepository(database.habitDao(), database.habitCompletionDao())
+@HiltViewModel
+class HabitSummaryViewModel @Inject constructor(
+    private val repository: HabitRepository,
+) : ViewModel() {
 
     private val _selectedDate = MutableStateFlow(LocalDate.now())
     val selectedDate: StateFlow<LocalDate> = _selectedDate.asStateFlow()

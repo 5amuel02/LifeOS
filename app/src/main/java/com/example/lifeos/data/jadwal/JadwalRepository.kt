@@ -1,8 +1,9 @@
 package com.example.lifeos.data.jadwal
 
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class JadwalRepository(private val jadwalDao: JadwalDao) {
+class JadwalRepository @Inject constructor(private val jadwalDao: JadwalDao) {
     fun getAll(): Flow<List<JadwalEntity>> = jadwalDao.getAll()
 
     suspend fun getAllOnce(): List<JadwalEntity> = jadwalDao.getAllOnce()
