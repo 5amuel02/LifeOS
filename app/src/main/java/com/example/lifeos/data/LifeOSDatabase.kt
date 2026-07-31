@@ -79,7 +79,8 @@ abstract class LifeOSDatabase : RoomDatabase() {
                     context.applicationContext,
                     LifeOSDatabase::class.java,
                     "lifeos.db"
-                ).fallbackToDestructiveMigration().build().also { instance = it }
+                ).fallbackToDestructiveMigration(dropAllTables = true)
+                    .build().also { instance = it }
             }
         }
     }
